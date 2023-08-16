@@ -31,9 +31,10 @@ CREATE TABLE intranet_accounts(
     FOREIGN KEY (email) REFERENCES employees(email) ON DELETE CASCADE
 );
 CREATE TABLE projects_employees(
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    -- id INT PRIMARY KEY AUTO_INCREMENT,
     emp_id INT NOT NULL,
     project_id INT NOT NULL,
+    PRIMARY KEY (emp_id, project_id),
     FOREIGN KEY(emp_id) REFERENCES employees(id) ON DELETE CASCADE,
     FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
@@ -115,28 +116,31 @@ VALUES (1, 2),
 SELECT *
 FROM employees AS e
     INNER JOIN intranet_accounts AS ia ON e.email = ia.email;
-SELECT e.id,e.first_name,pe.emp_id,pe.project_id,p.id,p.title,p.deadline
+SELECT e.id,
+    e.first_name,
+    pe.emp_id,
+    pe.project_id,
+    p.id,
+    p.title,
+    p.deadline
 FROM employees AS e
-    LEFT JOIN projects_employees AS pe ON  e.id=pe.emp_id
-    LEFT JOIN projects AS p ON p.id=pe.project_id
-
+    LEFT JOIN projects_employees AS pe ON e.id = pe.emp_id
+    LEFT JOIN projects AS p ON p.id = pe.project_id
 SELECT *
 FROM employees AS e
-    LEFT JOIN teams AS t ON t.id=e.team_id
-    WHERE t.name='Data Analysts'
-
-SELECT * 
+    LEFT JOIN teams AS t ON t.id = e.team_id
+WHERE t.name = 'Data Analysts'
+SELECT *
 FROM employees AS e
-    INNER JOIN teams AS t ON e.team_id=t.id
-    INNER JOIN buildings AS b ON b.id=t.building_id
-    ORDER BY e.birthdate
-
--- DROP TABLE intranet_accounts;
-    -- DROP TABLE employees;
-    -- DROP TABLE teams;
-    -- DROP TABLE projects;
-    -- DROP TABLE buildings;
-    -- DROP TABLE projects_employees;
-
-DELETE FROM buildings WHERE id=2;
-DELETE FROM employees WHERE id=2;
+    INNER JOIN teams AS t ON e.team_id = t.id
+    INNER JOIN buildings AS b ON b.id = t.building_id
+ORDER BY e.birthdate DROP TABLE projects_employees;
+DROP TABLE intranet_accounts;
+DROP TABLE projects;
+DROP TABLE employees;
+DROP TABLE teams;
+DROP TABLE buildings;
+DELETE FROM buildings
+WHERE id = 2;
+DELETE FROM employees
+WHERE id = 2;
